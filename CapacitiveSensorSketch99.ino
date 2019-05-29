@@ -1,0 +1,56 @@
+#include <CapacitiveSensor.h>
+
+/*
+ * CapitiveSense Library Demo Sketch
+ * Paul Badger 2008
+ * Uses a high value resistor e.g. 10M between send pin and receive pin
+ * Resistor effects sensitivity, experiment with values, 50K - 50M. Larger resistor values yield larger sensor values.
+ * Receive pin is the sensor pin - try different amounts of foil/metal on this pin
+ */
+#define LED 7
+#define LEDL 5
+#define LEDLP 3
+
+ CapacitiveSensor   cs_13_12 = CapacitiveSensor(13,12); 
+ CapacitiveSensor   cs_8_10 = CapacitiveSensor(8,10);   
+ CapacitiveSensor   cs_4_2 = CapacitiveSensor(4,2);        // 10M resistor between pins 4 & 2, pin 2 is sensor pin, add a wire and or foil if desired
+// CapacitiveSensor   cs_4_6 = CapacitiveSensor(4,6);        // 10M resistor between pins 4 & 6, pin 6 is sensor pin, add a wire and or foil
+// CapacitiveSensor   cs_4_8 = CapacitiveSensor(4,8);        // 10M resistor between pins 4 & 8, pin 8 is sensor pin, add a wire and or foil
+
+void setup()                    
+{
+//   cs_4_2.set_CS_AutocaL_Millis(0xFFFFFFFF);     // turn off autocalibrate on channel 1 - just as an example
+   Serial.begin(9600);
+     pinMode(LED, OUTPUT);
+     digitalWrite(LED, LOW); 
+      pinMode(LEDL, OUTPUT);
+     digitalWrite(LEDL, LOW); 
+     pinMode(LEDLP, OUTPUT);
+     digitalWrite(LEDLP, LOW); 
+}
+
+void loop()                    
+{
+    long start = millis();
+    long total1 =  cs_4_2.capacitiveSensor(30);
+    digitalWrite(LEDL, HIGH);
+    long total2 =  cs_8_10.capacitiveSensor(30);
+    long total3 =  cs_13_12.capacitiveSensor(30);
+    if (total1 < 29){   digitalWrite(LED, HIGH); }  // turn the LED on (HIGH is the voltage level)
+     else{digitalWrite(LED, LOW); }
+         if (total2 > 28){   digitalWrite(LEDL, HIGH); }  // turn the LED on (HIGH is the voltage level)
+     else{digitalWrite(LEDL, LOW); }
+     if (total1 > 32){   digitalWrite(LEDLP, HIGH); }  // turn the LED on (HIGH is the voltage level)
+     else{digitalWrite(LEDLP, LOW); }
+//    Serial.print(millis() - start);        // check on performance in milliseconds
+    Serial.print("\t");                    // tab character for debug windown spacing
+
+ //   Serial.print(total1);                  // print sensor output 1
+  //  Serial.print("\n");
+  //  Serial.print(total2);                  // print sensor output 2
+  //  Serial.print("\n");
+      Serial.print(total3);  
+    Serial.print("\n");
+    
+    delay(70);                             // arbitrary delay to limit data to serial port 
+}
